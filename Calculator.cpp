@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 
+double calculator(std::string calcul_str);
+
 size_t checkOperator(const std::string& calcul_str)
 {
 	size_t last_operator = calcul_str.find_last_of("+");
@@ -16,6 +18,41 @@ size_t checkOperator(const std::string& calcul_str)
 	return last_operator;
 }
 
+
+bool isStringNumber(char number) {
+	if (number < '0' || number > '9')
+		return false;
+
+	return true;
+}
+
+
+void checkMinus(std::string& calcul_str)
+{
+	size_t index = calcul_str.find('-');
+	if (index != std::string::npos && index > 0 && isStringNumber(calcul_str[index - 1]) && isStringNumber(calcul_str[index + 1]))
+		calcul_str.insert(index, "+");
+}
+
+
+bool checkParenthesis(std::string& calcul_str)
+{
+	size_t index = calcul_str.find('(');
+	if (index != std::string::npos)
+		return true;
+	return false;
+}
+
+
+void calculParenthesis(std::string& calcul_str)
+{
+	size_t parenthesis1 = calcul_str.find('(');
+	size_t parenthesis2 = calcul_str.find(')');
+	double result = calculator(calcul_str.substr(parenthesis1 + 1, parenthesis2 - parenthesis1));
+	calcul_str.replace(parenthesis1, parenthesis2 - parenthesis1, std::to_string(result));
+}
+
+
 double calculator(std::string calcul_str)
 {
 	std::string equation1;
@@ -24,7 +61,13 @@ double calculator(std::string calcul_str)
 	double result1;
 	double result2;
 
+	checkMinus(calcul_str);
+	if (checkParenthesis(calcul_str))
+	{
+		calculParenthesis(calcul_str);
+	}
 	size_t last_operator = checkOperator(calcul_str);
+	
 	if (last_operator == std::string::npos)
 		return std::stod(calcul_str);
 
@@ -32,9 +75,10 @@ double calculator(std::string calcul_str)
 	equation1 = calcul_str.substr(0, last_operator);
 	equation2 = calcul_str.substr(last_operator + 1, 50);
 
+
 	result1 = calculator(equation1);
 	result2 = calculator(equation2);
-	if (findSign(equation1))
+
 
 	switch (sign)
 	{
@@ -46,8 +90,9 @@ double calculator(std::string calcul_str)
 		return result1 / result2;
 	}
 
-
+	return 0;
 }
+
 
 std::string user()
 {
@@ -60,11 +105,15 @@ std::string user()
 
 int main()
 {
-	std::string calcul_str = user();
+	while (true)
+	{
+		std::string calcul_str = user();
 
-	double result = calculator(calcul_str);
+		double result = calculator(calcul_str);
 
-	std::cout << result;
+		std::cout << result << '\n';
+	}
+	
 
 	return 0;
 }
