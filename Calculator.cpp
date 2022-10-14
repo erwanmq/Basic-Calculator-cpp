@@ -1,11 +1,6 @@
 #include <iostream>
 #include <string>
 
-bool findSign(const std::string& calcul_str)
-{
-	return calcul_str.find_first_of("+-*/") != std::string::npos;
-}
-
 size_t checkOperator(const std::string& calcul_str)
 {
 	size_t last_operator = calcul_str.find_last_of("+");
@@ -37,23 +32,14 @@ double calculator(std::string calcul_str)
 	equation1 = calcul_str.substr(0, last_operator);
 	equation2 = calcul_str.substr(last_operator + 1, 50);
 
-
+	result1 = calculator(equation1);
+	result2 = calculator(equation2);
 	if (findSign(equation1))
-		result1 = calculator(equation1);
-	else
-		result1 = std::stod(equation1);
-	if (findSign(equation2))
-		result2 = calculator(equation2);
-	else
-		result2 = std::stod(equation2);
-
 
 	switch (sign)
 	{
 	case '+':
 		return result1 + result2;
-	case '-':
-		return result1 - result2;
 	case '*':
 		return result1 * result2;
 	case '/':
