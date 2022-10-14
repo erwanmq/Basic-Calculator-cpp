@@ -90,9 +90,20 @@ double calculator(std::string calcul_str)
 		return result1 / result2;
 	}
 
-	return 0;
+	return EXIT_FAILURE;
 }
 
+bool verification(std::string& calcul_str)
+{
+	std::string characters_allowed = "0123456789()+-*/.";
+	for (int i = 0; i < calcul_str.length(); i++)
+	{
+		if (characters_allowed.find(calcul_str[i]) == std::string::npos)
+			return false;
+	}
+
+	return true;
+}
 
 std::string user()
 {
@@ -108,12 +119,13 @@ int main()
 	while (true)
 	{
 		std::string calcul_str = user();
+		if (!verification(calcul_str))
+			continue;
 
 		double result = calculator(calcul_str);
 
 		std::cout << result << '\n';
 	}
 	
-
 	return 0;
 }
